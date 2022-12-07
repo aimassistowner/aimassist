@@ -12,9 +12,6 @@ kkk:NewButton("No Face", "dont know why niggas paying like 50 bucks for no face 
         end
         end
 end)
-kkk:NewSlider("Walkspeed", "frank eatin ass muhfucka every clout shot nigga!", 45, 0, function(s) -- lmao
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
 
 local ex = Window:NewTab("Credits") -- who made this bullshit
 local golddraco = ex:NewSection("UI Designer : NamelessGlxckz#7787") -- 
