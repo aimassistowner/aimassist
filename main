@@ -5,7 +5,6 @@ local uwu = Window:NewTab("Combat") -- silent aim , hitbox etc
 local xd = uwu:NewSection("Aim Cheats") -- 
 
 local lmao = Window:NewTab("Player") -- kim jong un
-local kkk = lmao:NewSection("God Power") -- \
 kkk:NewButton("No Face", "dont know why niggas paying like 50 bucks for no face but here it is for free shows ur tatoos nd shit so it looks real asf", function()
     for i,v in pairs(game.Players.LocalPlayer.Character.Head:GetChildren()) do
         if (v:IsA("Decal")) and v.Name == "Mad" or v.Name == "Stare" or v.Name == "chilled" or v.name == "Sad" then
