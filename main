@@ -1,13 +1,25 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("aimassist.com", "Midnight")
-
+local Window = Library.CreateLib("aimassist.com", "DarkTheme")
 
 local uwu = Window:NewTab("Combat") -- silent aim , hitbox etc
-local xd = uwu:NewSection("Aim Cheats") -- ok
+local xd = uwu:NewSection("Aim Cheats") -- 
+
+local lmao = Window:NewTab("Player") -- kim jong un
+local kkk = lmao:NewSection("God Power") -- \
+kkk:NewButton("No Face", "dont know why niggas paying like 50 bucks for no face but here it is for free shows ur tatoos nd shit so it looks real asf", function()
+    for i,v in pairs(game.Players.LocalPlayer.Character.Head:GetChildren()) do
+        if (v:IsA("Decal")) and v.Name == "Mad" or v.Name == "Stare" or v.Name == "chilled" or v.name == "Sad" then
+        v:Destroy()
+        end
+        end
+end)
+kkk:NewSlider("Walkspeed", "frank eatin ass muhfucka every clout shot nigga!", 45, 0, function(s) -- lmao
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end)
 
 local ex = Window:NewTab("Credits") -- who made this bullshit
-local golddraco = ex:NewSection("UI : NamelessGlxckz#7787") -- 
-local ar15 = ex:NewSection("Programmer : vp#1337") --
+local golddraco = ex:NewSection("UI Designer : NamelessGlxckz#7787") -- 
+local ar15 = ex:NewSection("Programmer & Scripter : vp#1337") --
 
 xd:NewButton("Silent Aim", "u must have ass aim brodie", function()
     -- init
