@@ -1,970 +1,177 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Aim Assist V.1.0", "DarkTheme")
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
 
-local uwu = Window:NewTab("Combat") -- silent aim , hitbox etc
-local xd = uwu:NewSection("Aim Cheats") -- 
-
-xd:NewButton("Hitbox Expander", "blow that monkeys head off", function()
-    if not game:IsLoaded() then game.Loaded:Wait() end
-
-local lPlayer = game.Players.LocalPlayer
--- thanks 3ds and kiko metatables r hard
-if not getgenv().MTAPIMutex then loadstring(game:HttpGet("https://raw.githubusercontent.com/KikoTheDon/MT-Api-v2/main/__source/mt-api%20v2.lua", true))() end
-
-if game.PlaceId == 111311599 then -- Critical Strike
-    local anticheat = game:GetService("ReplicatedFirst")["Serverbased AntiCheat"] -- then why put it in a localscript?
-    -- I literally copied the rest of this from the "Serverbased Anticheat"
-    local sValue = game:GetService("Players").LocalPlayer:WaitForChild("SValue")
-    local function constructAnticheatString()
-    	return "CS-" .. math.random(11111, 99999) .. "-" .. math.random(1111, 9999) .. "-" .. math.random(111111, 999999) .. math.random(1111111, 9999999) .. (sValue.Value * 6) ^ 2 + 18;
-    end
-    -- to be fair the game hasn't been updated in over a year
-    task.spawn(function()
-	    while true do task.wait(2)
-	    	game:GetService("ReplicatedStorage").ACDetect:FireServer(sValue.Value, constructAnticheatString());
-	    end
-    end)
-    anticheat.Disabled = true
-end
-
-local playerNames = {}
---local npcNames = {} -- I was planning on adding npc support
-local teamNames = {}
-
--- thanks inori and wally
-local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/Library.lua'))()
-local SaveManager = loadstring(game:HttpGet('https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/addons/SaveManager.lua'))()
-SaveManager:SetLibrary(Library)
-SaveManager:SetFolder("HitboxExtender")
-Library:Notify("Welcome to dirks hitbox expander v1")
-local mainWindow = Library:CreateWindow("Personal object of abuse")
-
-local mainTab = mainWindow:AddTab("Main")
-local mainGroupbox = mainTab:AddLeftGroupbox("Aim Assist V1 Hitbox Expander")
-local ignoresGroupbox = mainTab:AddRightGroupbox("Ignores")
-local miscGroupbox = mainTab:AddLeftGroupbox("Misc")
-
-local extenderToggled = mainGroupbox:AddToggle("extenderToggled", {Text = "Toggle"})
-local extenderSize = mainGroupbox:AddSlider("extenderSize", {Text = "Size", Min = 2, Max = 100, Default = 10, Rounding = 0})
-local extenderTransparency = mainGroupbox:AddSlider("extenderTransparency", {Text = "Transparency", Min = 0, Max = 1, Default = 0.5, Rounding = 2})
--- for some reason the save manager doesn't save inputs, idk how to fix it
-local customPartNameInput = mainGroupbox:AddInput("customPartList", {Text = "Custom Part Name", Default = "HeadHB"})
-local extenderPartList = mainGroupbox:AddDropdown("extenderPartList", {Text = "Body Parts", AllowNull = true, Multi = true, Values = {"Custom Part", "Head", "HumanoidRootPart", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"}, Default = "Head"})
-local extenderUpdateRate = miscGroupbox:AddSlider("extenderUpdateRate", {Text = "Update Rate", Min = 0, Max = 1000, Default = 0, Rounding = 0, Suffix = "ms"})
-
-local extenderSitCheck = ignoresGroupbox:AddToggle("extenderSitCheck", {Text = "Ignore Sitting Players"})
-local ignoreSelectedPlayersToggled = ignoresGroupbox:AddToggle("ignoreSelectedPlayersToggled", {Text = "Ignore Selected Players"})
-local ignorePlayerList = ignoresGroupbox:AddDropdown("ignorePlayerList", {Text = "Players", AllowNull = true, Multi = true, Values = playerNames})
---local ignoreSelectedNpcsToggled = ignoresGroupbox:AddToggle("ignoreSelectedNpcsToggled", {Text = "Ignore Selected Npcs"})
---local ignoreNpcList = ignoresGroupbox:AddDropdown("ignoreNpcList", {Text = "Npcs", AllowNull = true, Multi = true, Values = npcNames})
-local ignoreSelfTeamToggled = ignoresGroupbox:AddToggle("ignoreSelfTeamToggled", {Text = "Ignore Own Team"})
-local ignoreSelectedTeamsToggled = ignoresGroupbox:AddToggle("ignoreSelectedTeamsToggled", {Text = "Ignore Selected Teams"})
-local ignoreTeamList = ignoresGroupbox:AddDropdown("ignoreTeamList", {Text = "Teams", AllowNull = true, Multi = true, Values = teamNames})
-
--- thanks roblox dev forum
-local function CheckTableEquality(t1,t2)
-    for i,v in next, t1 do if t2[i]~=v then return false end end
-    for i,v in next, t2 do if t1[i]~=v then return false end end
-    return true
-end
-
--- updates the player list
-task.spawn(function()
-    while true do task.wait() -- if you cry about while true do loops then kys
-        local temp = {}
-        for i,v in ipairs(game.Players:GetPlayers()) do
-            if v ~= lPlayer then
-                temp[i] = v.Name
+Rayfield:Notify({
+    Title = "Welcome to aim assist V.15",
+    Content = "This content is just to notify you that we thank you and appreciate you for using our script hub!",
+    Duration = 6.5,
+    Image = 4483362458,
+    Actions = { -- Notification Buttons
+        Ignore = {
+            Name = "Okay",
+            Callback = function()
+                print("The user tapped Okay!")
             end
-        end
-        if not CheckTableEquality(playerNames, temp) then
-            playerNames = temp
-            ignorePlayerList.Values = temp
-            ignorePlayerList:SetValues()
-            ignorePlayerList:Display()
-        end
-    end
-end)
+		},
+	},
+})
 
--- updates the team list
-task.spawn(function()
-    while true do task.wait()
-        local temp = {}
-        for i,v in pairs(game.Teams:GetTeams()) do
-            temp[i] = v.Name
-        end
-        if not CheckTableEquality(teamNames, temp) then
-            teamNames = temp
-            ignoreTeamList.Values = temp
-            ignoreTeamList:SetValues()
-            ignoreTeamList:Display()
-        end
-    end
-end)
+local Window = Rayfield:CreateWindow({
+	Name = "Aim Assist Hub V1.5",
+	LoadingTitle = "A I M _ A S S I S T",
+	LoadingSubtitle = "Welcome.",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = nil, -- Create a custom folder for your hub/game
+		FileName = "aah"
+	},
+        Discord = {
+        	Enabled = false,
+        	Invite = "", -- The Discord invite code, do not include discord.gg/
+        	RememberJoins = false -- Set this to false to make them join the discord every time they load it up
+        },
+	KeySystem = true, -- Set this to true to use our key system
+	KeySettings = {
+		Title = "AIM_ASSIST",
+		Subtitle = "Enter your key to get access, Using someone elses key will result in a perm blacklist.",
+		Note = "Join our discord server",
+		FileName = "SiriusKey",
+		SaveKey = true,
+		GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+		Key = "aim"
+	}
+})
 
---task.spawn(function()
---    while true do task.wait()
---        local temp = {}
---        for i,v in ipairs(npcs) do
---            temp[i] = v.Name
---        end
---        if not CheckTableEquality(npcNames, temp) then
---            ignoreNpcList.Values = temp
---            ignoreNpcList:SetValues()
---            ignoreNpcList:Display()
---        end
---    end
---end)
+-- TABS & SECTIONS --
 
-SaveManager:BuildConfigSection(mainTab)
-SaveManager:LoadAutoloadConfig()
+local v2 = Window:CreateTab("Aim Cheats", 0) -- Title, Image
+local v2t = v2:CreateSection("This is where you will find any aim related hacks or known as our aim assist.")
 
--- Returns a table of every possible bodypart in a character, or nil if the character does not exist.
-local function getBodyParts(character)
-    local humanoid = character:WaitForChild("Humanoid")
-    local parts = {
-        Head = character:WaitForChild("Head"),
-        HumanoidRootPart = character:WaitForChild("HumanoidRootPart"),
-        Humanoid = character:WaitForChild("Humanoid")
-    }
-    if humanoid.RigType == Enum.HumanoidRigType.R6 then
-        parts.Torso = {Torso = character:WaitForChild("Torso")}
-        parts["Left Arm"] = {LeftArm = character:WaitForChild("Left Arm")}
-        parts["Right Arm"] = {RightArm = character:WaitForChild("Right Arm")}
-        parts["Left Leg"] = {LeftLeg = character:WaitForChild("Left Leg")}
-        parts["Right Leg"] = {RightLeg = character:WaitForChild("Right Leg")}
-    elseif humanoid.RigType == Enum.HumanoidRigType.R15 then
-        parts.Torso = {
-            UpperTorso = character:WaitForChild("UpperTorso"),
-            LowerTorso = character:WaitForChild("LowerTorso")
-        }
-        parts["Left Arm"] = {
-            LeftHand = character:WaitForChild("LeftHand"),
-            LeftLowerArm = character:WaitForChild("LeftLowerArm"),
-            LeftUpperArm = character:WaitForChild("LeftUpperArm")
-        }
-        parts["Right Arm"] = {
-            RightHand = character:WaitForChild("RightHand"),
-            RightLowerArm = character:WaitForChild("RightLowerArm"),
-            RightUpperArm = character:WaitForChild("RightUpperArm")
-        }
-        parts["Left Leg"] = {
-            LeftFoot = character:WaitForChild("LeftFoot"),
-            LeftLowerLeg = character:WaitForChild("LeftLowerLeg"),
-            LeftUpperLeg = character:WaitForChild("LeftUpperLeg")
-        }
-        parts["Right Leg"] = {
-            RightFoot = character:WaitForChild("RightFoot"),
-            RightLowerLeg = character:WaitForChild("RightLowerLeg"),
-            RightUpperLeg = character:WaitForChild("RightUpperLeg")
-        }
-    end
-    return parts
-end
+local v3 = Window:CreateTab("Player Cheats", 0) -- Title, Image
+local v3t = v3:CreateSection("This is where you will find any localplayer cheats.")
 
--- Main function that allows the character passed to be expanded at will
-local function extendCharacter(character)
-    local player = game.Players:GetPlayerFromCharacter(character)
-    local timer = 0
-    local originals = {}
-    local collisions = {}
-    local CharacterAdded = {}
-    local bodyParts = getBodyParts(character)
-    --Sets up original sizes, creates collision constraints, and creates hooks to bypass localscript anticheats
-    local function setup(i, v)
-        if not originals[i] then
-            originals[i] = {}
-            originals[i].Size = v.Size
-            originals[i].Transparency = v.Transparency
-            originals[i].CanCollide = v.CanCollide
-            originals[i].Massless = v.Massless
-            local sizeHook = v:AddGetHook("Size", originals[i].Size)
-            local transparencyHook = v:AddGetHook("Transparency", originals[i].Transparency)
-            local canCollideHook = v:AddGetHook("CanCollide", originals[i].CanCollide)
-            local masslessHook = v:AddGetHook("Massless", originals[i].Massless)
-            v:AddSetHook("Size", function(self, value)
-                originals[i].Size = value
-                sizeHook:Modify("Size", value)
-                return value
-            end)
-            v:AddSetHook("Transparency", function(self, value)
-                originals[i].Transparency = value
-                transparencyHook:Modify("Transparency", value)
-                return value
-            end)
-            v:AddSetHook("CanCollide", function(self, value)
-                originals[i].CanCollide = value
-                canCollideHook:Modify("CanCollide", value)
-                return value
-            end)
-            v:AddSetHook("Massless", function(self, value)
-                originals[i].Massless = value
-                masslessHook:Modify("Massless", value)
-                return value
-            end)
-        end
-        if not collisions[i] then
-            collisions[i] = {}
-            -- thanks to GameGuy#5286 for telling me collision constraints exist
-            for o,b in pairs(getBodyParts(lPlayer.Character)) do
-                if o ~= "Humanoid" and type(b) ~= "table" then
-                    collisions[i][o] = Instance.new("NoCollisionConstraint", v)
-                    collisions[i][o].Enabled = false
-                    collisions[i][o].Part0 = v
-                    collisions[i][o].Part1 = b
-                    CharacterAdded[i] = lPlayer.CharacterAdded:Connect(function(char)
-                        local temp = char:WaitForChild(o)
-                        collisions[i][o].Part1 = temp
-                    end)
-                elseif type(b) == "table" then
-                    for g,z in pairs(b) do
-                        if z:IsA("BasePart") then
-                            collisions[i][g] = Instance.new("NoCollisionConstraint", v)
-                            collisions[i][g].Enabled = false
-                            collisions[i][g].Part0 = v
-                            collisions[i][g].Part1 = z
-                            CharacterAdded[i] = lPlayer.CharacterAdded:Connect(function(char)
-                                local temp = char:WaitForChild(g)
-                                if temp:IsA("BasePart") then
-                                    collisions[i][g].Part1 = temp
-                                end
-                            end)
-                        end
+local v4 = Window:CreateTab("Cosmetic Cheats", 0) -- Title, Image
+local v4t = v4:CreateSection("This is where you will find any cosmetic cheats.")
+
+local v5 = Window:CreateTab("Bypass Cheats", 0) -- Title, Image
+local v5t = v5:CreateSection("This is where you will be able to bypass any cheats that we cracked.")
+
+local v6 = Window:CreateTab("Credits", 0) -- Title, Image
+local v6r = v6:CreateSection("Lead Programmer : vp#1337")
+local v6x = v6:CreateSection("Beta Tester : ryxe#0822")
+local v6g = v6:CreateSection("Programmer : NamelessGlxckz#7787")
+
+-- AIM BUTTONS --
+
+local Button = v2:CreateButton({
+	Name = "Silent Aim Assist",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/aimassistowner/idk/main/main.txt"))()
+        Rayfield:Notify({
+            Title = "Script Notifcation",
+            Content = "You have ran 'Silent Aimbot' To open the gui click the Right Control button on your keyboard to open or close the UI.",
+            Duration = 6.5,
+            Image = 4483362458,
+            Actions = { -- Notification Buttons
+                Ignore = {
+                    Name = "Okay",
+                    Callback = function()
+                        print("The user tapped Okay!")
                     end
-                end
-            end
-        end
-    end
-    do
-        local customPart = character:FindFirstChild(customPartNameInput.Value)
-        if customPart and customPart:IsA("BasePart") then
-            if not originals[customPart.Name] then
-                setup(customPart.Name, customPart)
-            end
-        end
-        for i,v in pairs(bodyParts) do
-            if i ~= "Humanoid" and type(v) ~= "table" then
-                if not originals[i] then
-                    setup(i,v)
-                end
-            elseif type(v) == "table" then
-                for o,b in pairs(v) do
-                    if not originals[o] then
-                        setup(o,b)
-                    end
-                end
-            end
-        end
-    end
-    -- resets the properties of the selected part.
-    -- if "all" is passed, will reset every part
-    local function reset(part)
-        if part == "custompart" or part == "all" then
-            local customPart = character:FindFirstChild(customPartNameInput.Value)
-            if customPart and customPart:IsA("BasePart") then
-                customPart.Size = originals[customPart.Name].Size
-                customPart.Transparency = originals[customPart.Name].Transparency
-                customPart.CanCollide = originals[customPart.Name].CanCollide
-                customPart.Massless = originals[customPart.Name].Massless
-            end
-        end
-        for i,v in pairs(bodyParts) do
-            if string.lower(part) == string.lower(i) or part == "all" then
-                if i ~= "Humanoid" and type(v) ~= "table" then
-                    v.Size = originals[i].Size
-                    v.Transparency = originals[i].Transparency
-                    v.CanCollide = originals[i].CanCollide
-                    v.Massless = originals[i].Massless
-                elseif type(v) == "table" then
-                    for o,b in pairs(v) do
-                        b.Size = originals[o].Size
-                        b.Transparency = originals[o].Transparency
-                        b.Massless = originals[o].Massless
-                        for _,z in pairs(collisions[o]) do
-                            if z.Enabled == true and z.Part0 == b then
-                                z.Enabled = false
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-    local function getChecks()
-        if bodyParts.Humanoid:GetState() == Enum.HumanoidStateType.Dead then
-            return 2
-        end
-        if extenderSitCheck.Value then
-            if bodyParts.Humanoid.Sit then
-                return 1
-            end
-        end
-        if ignoreSelfTeamToggled.Value then
-            if game.PlaceId == 2039118386 then -- Neighborhood War
-                local selfTeam
-                local playerTeam
-                pcall(function()
-                    selfTeam = lPlayer.Character.HumanoidRootPart.BrickColor
-                    playerTeam = bodyParts.HumanoidRootPart.BrickColor
-                end)
-                if selfTeam == playerTeam then
-                    return 1
-                end
-            else
-                if lPlayer.Team == player.Team then
-                    return 1
-                end
-            end
-        end
-        if ignoreSelectedTeamsToggled.Value then
-            local teamList = ignoreTeamList:GetActiveValues()
-            if table.find(teamList, tostring(player.Team)) then
-                return 1
-            end
-        end
-        if ignoreSelectedPlayersToggled.Value then
-            local playerList = ignorePlayerList:GetActiveValues()
-            if table.find(playerList, tostring(player.Name)) then
-                return 1
-            end
-        end
-        return 0
-    end
-    -- here's the actual expander code
-    local Heartbeat
-    Heartbeat = game:GetService("RunService").Heartbeat:Connect(function(deltaTime)
-        timer = deltaTime
-        if timer >= (extenderUpdateRate.Value / 100) then -- divided by 100 because milliseconds
-            timer = 0
-            local bodyPartList = extenderPartList:GetActiveValues()
-            local checks = getChecks()
-            if checks == 2 then
-                reset("all")
-                for _,v in pairs(CharacterAdded) do
-                    v:Disconnect()
-                end
-                Heartbeat:Disconnect()
-                return
-            elseif checks == 1 then
-                reset("all")
-                return
-            end
-            if extenderToggled.Value then
-                if table.find(bodyPartList, "Custom Part") then
-                    local customPart = character:FindFirstChild(customPartNameInput.Value)
-                    if customPart then
-                        customPart.Size = Vector3.new(extenderSize.Value, extenderSize.Value, extenderSize.Value)
-                        customPart.Transparency = extenderTransparency.Value
-                        customPart.CanCollide = false
-                        customPart.Massless = true
-                    end
-                else
-                    reset("custompart")
-                end
-                for i,v in pairs(bodyParts) do
-                    if table.find(bodyPartList, i) then
-                        if type(v) ~= "table" then
-                            if i ~= "HumanoidRootPart" then
-                                v.Massless = true
-                            end
-                            v.Size = Vector3.new(extenderSize.Value, extenderSize.Value, extenderSize.Value)
-                            v.Transparency = extenderTransparency.Value
-                            v.CanCollide = false
-                        else
-                            for o,b in pairs(v) do
-                                b.Massless = true
-                                b.Size = Vector3.new(extenderSize.Value, extenderSize.Value, extenderSize.Value)
-                                b.Transparency = extenderTransparency.Value
-                                for _,z in pairs(collisions[o]) do
-                                    if z.Enabled == false and z.Part0 == b then
-                                        z.Enabled = true
-                                    end
-                                end
-                            end
-                        end
-                    else
-                        reset(i)
-                    end
-                end
-            else
-                reset("all")
-            end
-        end
-    end)
-    local PlayerRemoving
-    PlayerRemoving = game.Players.PlayerRemoving:Connect(function(v)
-        if v == player then
-            Heartbeat:Disconnect()
-            PlayerRemoving:Disconnect()
-        end
-    end)
-end
-for _,player in ipairs(game.Players:GetPlayers()) do
-    if player ~= lPlayer then
-        task.spawn(function()
-            if player.Character then
-                -- why use coroutine.wrap after I've been abusing task.spawn? fuck you that's why
-                coroutine.wrap(extendCharacter)(player.Character)
-            end
-            player.CharacterAdded:Connect(function(v)
-                coroutine.wrap(extendCharacter)(v)
-            end)
-        end)
-    end
-end
-game.Players.PlayerAdded:Connect(function(player)
-        player.CharacterAdded:Connect(function(v)
-        coroutine.wrap(extendCharacter)(v)
-    end)
+                },
+            },
+        })
+	end,
+})
+
+local Button = v2:CreateButton({
+	Name = "Hitbox Expander",
+	Callback = function()
+		-- leave a like pls
+
+
+_G.HeadSize = 5
+_G.Disabled = true
+ 
+game:GetService('RunService').RenderStepped:connect(function()
+if _G.Disabled then
+for i,v in next, game:GetService('Players'):GetPlayers() do
+if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+pcall(function()
+v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+v.Character.HumanoidRootPart.Transparency = 0.7
+v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+v.Character.HumanoidRootPart.Material = "Neon"
+v.Character.HumanoidRootPart.CanCollide = false
 end)
--- now, where are my schizo meds?
-    
-end)
-
-xd:NewButton("Player ESP", "makes u see everyone lol", function()
-    
---- Tut
-
-local esp_settings = { ---- table for esp settings 
-    textsize = 8,
-    colour = 255,255,255
-}
-
-local gui = Instance.new("BillboardGui")
-local esp = Instance.new("TextLabel",gui) ---- new instances to make the billboard gui and the textlabel
-
-
-
-gui.Name = "Cracked esp"; ---- properties of the esp
-gui.ResetOnSpawn = false
-gui.AlwaysOnTop = true;
-gui.LightInfluence = 0;
-gui.Size = UDim2.new(1.75, 0, 1.75, 0);
-esp.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-esp.Text = ""
-esp.Size = UDim2.new(0.0001, 0.00001, 0.0001, 0.00001);
-esp.BorderSizePixel = 4;
-esp.BorderColor3 = Color3.new(esp_settings.colour)
-esp.BorderSizePixel = 0
-esp.Font = "GothamSemibold"
-esp.TextSize = esp_settings.textsize
-esp.TextColor3 = Color3.fromRGB(esp_settings.colour) -- text colour
-
-game:GetService("RunService").RenderStepped:Connect(function() ---- loops faster than a while loop :)
-    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
-        if v ~= game:GetService("Players").LocalPlayer and v.Character.Head:FindFirstChild("Cracked esp")==nil  then -- craeting checks for team check, local player etc
-            esp.Text = "{"..v.Name.."}"
-            gui:Clone().Parent = v.Character.Head
-    end
+end
+end
 end
 end)
+	end,
+})
+
+local Button = v2:CreateButton({
+	Name = "Rmove Hitbox Expander",
+	Callback = function()
+		-- leave a like pls
+
+
+_G.HeadSize = 0
+_G.Disabled = true
+ 
+game:GetService('RunService').RenderStepped:connect(function()
+if _G.Disabled then
+for i,v in next, game:GetService('Players'):GetPlayers() do
+if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+pcall(function()
+v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+v.Character.HumanoidRootPart.Transparency = 0.7
+v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+v.Character.HumanoidRootPart.Material = "Neon"
+v.Character.HumanoidRootPart.CanCollide = false
 end)
-
-xd:NewButton("Silent Aim", "ultimate aim assist xd", function()
-    -- init
-if not game:IsLoaded() then 
-    game.Loaded:Wait()
 end
-
-if not syn or not protectgui then
-    getgenv().protectgui = function() end
 end
-
-local SilentAimSettings = {
-    Enabled = false,
-    
-    ClassName = "sl2 aim assist by dirk lmao",
-    ToggleKey = "RightAlt",
-    
-    TeamCheck = false,
-    VisibleCheck = false, 
-    TargetPart = "HumanoidRootPart",
-    SilentAimMethod = "Raycast",
-    
-    FOVRadius = 130,
-    FOVVisible = false,
-    ShowSilentAimTarget = false, 
-    
-    MouseHitPrediction = false,
-    MouseHitPredictionAmount = 0.165,
-    HitChance = 100
-}
-
--- variables
-getgenv().SilentAimSettings = Settings
-local MainFileName = "UniversalSilentAim"
-local SelectedFile, FileToSave = "", ""
-
-local Camera = workspace.CurrentCamera
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local GuiService = game:GetService("GuiService")
-local UserInputService = game:GetService("UserInputService")
-local HttpService = game:GetService("HttpService")
-
-local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
-
-local GetChildren = game.GetChildren
-local GetPlayers = Players.GetPlayers
-local WorldToScreen = Camera.WorldToScreenPoint
-local WorldToViewportPoint = Camera.WorldToViewportPoint
-local GetPartsObscuringTarget = Camera.GetPartsObscuringTarget
-local FindFirstChild = game.FindFirstChild
-local RenderStepped = RunService.RenderStepped
-local GuiInset = GuiService.GetGuiInset
-local GetMouseLocation = UserInputService.GetMouseLocation
-
-local resume = coroutine.resume 
-local create = coroutine.create
-
-local ValidTargetParts = {"Head", "HumanoidRootPart"}
-local PredictionAmount = 0.165
-
-local mouse_box = Drawing.new("Square")
-mouse_box.Visible = true 
-mouse_box.ZIndex = 999 
-mouse_box.Color = Color3.fromRGB(54, 57, 241)
-mouse_box.Thickness = 20 
-mouse_box.Size = Vector2.new(20, 20)
-mouse_box.Filled = true 
-
-local fov_circle = Drawing.new("Circle")
-fov_circle.Thickness = 1
-fov_circle.NumSides = 100
-fov_circle.Radius = 180
-fov_circle.Filled = false
-fov_circle.Visible = false
-fov_circle.ZIndex = 999
-fov_circle.Transparency = 1
-fov_circle.Color = Color3.fromRGB(54, 57, 241)
-
-local ExpectedArguments = {
-    FindPartOnRayWithIgnoreList = {
-        ArgCountRequired = 3,
-        Args = {
-            "Instance", "Ray", "table", "boolean", "boolean"
-        }
-    },
-    FindPartOnRayWithWhitelist = {
-        ArgCountRequired = 3,
-        Args = {
-            "Instance", "Ray", "table", "boolean"
-        }
-    },
-    FindPartOnRay = {
-        ArgCountRequired = 2,
-        Args = {
-            "Instance", "Ray", "Instance", "boolean", "boolean"
-        }
-    },
-    Raycast = {
-        ArgCountRequired = 3,
-        Args = {
-            "Instance", "Vector3", "Vector3", "RaycastParams"
-        }
-    }
-}
-
-function CalculateChance(Percentage)
-    -- // Floor the percentage
-    Percentage = math.floor(Percentage)
-
-    -- // Get the chance
-    local chance = math.floor(Random.new().NextNumber(Random.new(), 0, 1) * 100) / 100
-
-    -- // Return
-    return chance <= Percentage / 100
 end
+end)
+	end,
+})
+
+-- PLAYER BUTTONS --
+
+local Button = v3:CreateButton({
+	Name = "Dupe Method",
+	Callback = function()
+		Rayfield:Notify({
+			Title = "Working Dupe Tutorial",
+			Content = "go on ur main, U give ur friend or alt the shit u wanna give, CAN BE EVERYTHING. GUNS CASH WHATEVER. Than u go on ur phone and join a other server. Than it will say same account launched from another device.",
+			Duration = 6.5,
+			Image = 0,
+			Actions = { -- Notification Buttons
+				Ignore = {
+					Name = "Okay!",
+					Callback = function()
+						print("xd")
+					end
+				},
+			},
+		})
+	end,
+})
 
 
---[[file handling]] do 
-    if not isfolder(MainFileName) then 
-        makefolder(MainFileName);
-    end
-    
-    if not isfolder(string.format("%s/%s", MainFileName, tostring(game.PlaceId))) then 
-        makefolder(string.format("%s/%s", MainFileName, tostring(game.PlaceId)))
-    end
-end
+-- COSMETIC BUTTONS --
 
-local Files = listfiles(string.format("%s/%s", "UniversalSilentAim", tostring(game.PlaceId)))
 
--- functions
-local function GetFiles() -- credits to the linoria lib for this function, listfiles returns the files full path and its annoying
-	local out = {}
-	for i = 1, #Files do
-		local file = Files[i]
-		if file:sub(-4) == '.lua' then
-			-- i hate this but it has to be done ...
 
-			local pos = file:find('.lua', 1, true)
-			local start = pos
 
-			local char = file:sub(pos, pos)
-			while char ~= '/' and char ~= '\\' and char ~= '' do
-				pos = pos - 1
-				char = file:sub(pos, pos)
+local Button = v4:CreateButton({
+	Name = "No Face",
+	Callback = function()
+		for i,v in pairs(game.Players.LocalPlayer.Character.Head:GetChildren()) do
+			if (v:IsA("Decal")) and v.Name == "Mad" or v.Name == "Stare" or v.Name == "chilled" or v.name == "Sad" then
+			v:Destroy()
 			end
-
-			if char == '/' or char == '\\' then
-				table.insert(out, file:sub(pos + 1, start - 1))
 			end
-		end
-	end
-	
-	return out
-end
-
-local function UpdateFile(FileName)
-    assert(FileName or FileName == "string", "oopsies");
-    writefile(string.format("%s/%s/%s.lua", MainFileName, tostring(game.PlaceId), FileName), HttpService:JSONEncode(SilentAimSettings))
-end
-
-local function LoadFile(FileName)
-    assert(FileName or FileName == "string", "oopsies");
-    
-    local File = string.format("%s/%s/%s.lua", MainFileName, tostring(game.PlaceId), FileName)
-    local ConfigData = HttpService:JSONDecode(readfile(File))
-    for Index, Value in next, ConfigData do
-        SilentAimSettings[Index] = Value
-    end
-end
-
-local function getPositionOnScreen(Vector)
-    local Vec3, OnScreen = WorldToScreen(Camera, Vector)
-    return Vector2.new(Vec3.X, Vec3.Y), OnScreen
-end
-
-local function ValidateArguments(Args, RayMethod)
-    local Matches = 0
-    if #Args < RayMethod.ArgCountRequired then
-        return false
-    end
-    for Pos, Argument in next, Args do
-        if typeof(Argument) == RayMethod.Args[Pos] then
-            Matches = Matches + 1
-        end
-    end
-    return Matches >= RayMethod.ArgCountRequired
-end
-
-local function getDirection(Origin, Position)
-    return (Position - Origin).Unit * 1000
-end
-
-local function getMousePosition()
-    return GetMouseLocation(UserInputService)
-end
-
-local function IsPlayerVisible(Player)
-    local PlayerCharacter = Player.Character
-    local LocalPlayerCharacter = LocalPlayer.Character
-    
-    if not (PlayerCharacter or LocalPlayerCharacter) then return end 
-    
-    local PlayerRoot = FindFirstChild(PlayerCharacter, Options.TargetPart.Value) or FindFirstChild(PlayerCharacter, "HumanoidRootPart")
-    
-    if not PlayerRoot then return end 
-    
-    local CastPoints, IgnoreList = {PlayerRoot.Position, LocalPlayerCharacter, PlayerCharacter}, {LocalPlayerCharacter, PlayerCharacter}
-    local ObscuringObjects = #GetPartsObscuringTarget(Camera, CastPoints, IgnoreList)
-    
-    return ((ObscuringObjects == 0 and true) or (ObscuringObjects > 0 and false))
-end
-
-local function getClosestPlayer()
-    if not Options.TargetPart.Value then return end
-    local Closest
-    local DistanceToMouse
-    for _, Player in next, GetPlayers(Players) do
-        if Player == LocalPlayer then continue end
-        if Toggles.TeamCheck.Value and Player.Team == LocalPlayer.Team then continue end
-
-        local Character = Player.Character
-        if not Character then continue end
-        
-        if Toggles.VisibleCheck.Value and not IsPlayerVisible(Player) then continue end
-
-        local HumanoidRootPart = FindFirstChild(Character, "HumanoidRootPart")
-        local Humanoid = FindFirstChild(Character, "Humanoid")
-        if not HumanoidRootPart or not Humanoid or Humanoid and Humanoid.Health <= 0 then continue end
-
-        local ScreenPosition, OnScreen = getPositionOnScreen(HumanoidRootPart.Position)
-        if not OnScreen then continue end
-
-        local Distance = (getMousePosition() - ScreenPosition).Magnitude
-        if Distance <= (DistanceToMouse or Options.Radius.Value or 2000) then
-            Closest = ((Options.TargetPart.Value == "Random" and Character[ValidTargetParts[math.random(1, #ValidTargetParts)]]) or Character[Options.TargetPart.Value])
-            DistanceToMouse = Distance
-        end
-    end
-    return Closest
-end
-
--- ui creating & handling
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xaxaxaxaxaxaxaxaxa/Libraries/main/UI's/Linoria/Source.lua"))()
-Library:SetWatermark("dirk")
-
-local Window = Library:CreateWindow("sl2 aim assist by mr.dirk")
-local GeneralTab = Window:AddTab("General")
-local MainBOX = GeneralTab:AddLeftTabbox("Main") do
-    local Main = MainBOX:AddTab("Main")
-    
-    Main:AddToggle("aim_Enabled", {Text = "Enabled"}):AddKeyPicker("aim_Enabled_KeyPicker", {Default = "RightAlt", SyncToggleState = true, Mode = "Toggle", Text = "Enabled", NoUI = false});
-    Options.aim_Enabled_KeyPicker:OnClick(function()
-        SilentAimSettings.Enabled = not SilentAimSettings.Enabled
-        
-        Toggles.aim_Enabled.Value = SilentAimSettings.Enabled
-        Toggles.aim_Enabled:SetValue(SilentAimSettings.Enabled)
-        
-        mouse_box.Visible = SilentAimSettings.Enabled
-    end)
-    
-    Main:AddToggle("TeamCheck", {Text = "Team Check", Default = SilentAimSettings.TeamCheck}):OnChanged(function()
-        SilentAimSettings.TeamCheck = Toggles.TeamCheck.Value
-    end)
-    Main:AddToggle("VisibleCheck", {Text = "Visible Check", Default = SilentAimSettings.VisibleCheck}):OnChanged(function()
-        SilentAimSettings.VisibleCheck = Toggles.VisibleCheck.Value
-    end)
-    Main:AddDropdown("TargetPart", {Text = "Target Part", Default = SilentAimSettings.TargetPart, Values = {"Head", "HumanoidRootPart", "Random"}}):OnChanged(function()
-        SilentAimSettings.TargetPart = Options.TargetPart.Value
-    end)
-    Main:AddDropdown("Method", {Text = "Silent Aim Method", Default = SilentAimSettings.SilentAimMethod, Values = {
-        "Raycast","FindPartOnRay",
-        "FindPartOnRayWithWhitelist",
-        "FindPartOnRayWithIgnoreList",
-        "Mouse.Hit/Target"
-    }}):OnChanged(function() 
-        SilentAimSettings.SilentAimMethod = Options.Method.Value 
-    end)
-    Main:AddSlider('HitChance', {
-        Text = 'Hit chance',
-        Default = 100,
-        Min = 0,
-        Max = 100,
-        Rounding = 1,
-    
-        Compact = false,
-    })
-    Options.HitChance:OnChanged(function()
-        SilentAimSettings.HitChance = Options.HitChance.Value
-    end)
-end
-
-local MiscellaneousBOX = GeneralTab:AddLeftTabbox("Miscellaneous")
-local FieldOfViewBOX = GeneralTab:AddLeftTabbox("Field Of View") do
-    local Main = FieldOfViewBOX:AddTab("Visuals")
-    
-    Main:AddToggle("Visible", {Text = "Show FOV Circle"}):AddColorPicker("Color", {Default = Color3.fromRGB(54, 57, 241)}):OnChanged(function()
-        fov_circle.Visible = Toggles.Visible.Value
-        SilentAimSettings.FOVVisible = Toggles.Visible.Value
-    end)
-    Main:AddSlider("Radius", {Text = "FOV Circle Radius", Min = 0, Max = 360, Default = 130, Rounding = 0}):OnChanged(function()
-        fov_circle.Radius = Options.Radius.Value
-        SilentAimSettings.FOVRadius = Options.Radius.Value
-    end)
-    Main:AddToggle("MousePosition", {Text = "Show Silent Aim Target"}):AddColorPicker("MouseVisualizeColor", {Default = Color3.fromRGB(54, 57, 241)}):OnChanged(function()
-        mouse_box.Visible = Toggles.MousePosition.Value 
-        SilentAimSettings.ShowSilentAimTarget = Toggles.MousePosition.Value 
-    end)
-    local PredictionTab = MiscellaneousBOX:AddTab("Prediction")
-    PredictionTab:AddToggle("Prediction", {Text = "Mouse.Hit/Target Prediction"}):OnChanged(function()
-        SilentAimSettings.MouseHitPrediction = Toggles.Prediction.Value
-    end)
-    PredictionTab:AddSlider("Amount", {Text = "Prediction Amount", Min = 0.165, Max = 1, Default = 0.165, Rounding = 3}):OnChanged(function()
-        PredictionAmount = Options.Amount.Value
-        SilentAimSettings.MouseHitPredictionAmount = Options.Amount.Value
-    end)
-end
-
-local CreateConfigurationBOX = GeneralTab:AddRightTabbox("Create Configuration") do 
-    local Main = CreateConfigurationBOX:AddTab("Create Configuration")
-    
-    Main:AddInput("CreateConfigTextBox", {Default = "", Numeric = false, Finished = false, Text = "Create Configuration to Create", Tooltip = "Creates a configuration file containing settings you can save and load", Placeholder = "File Name here"}):OnChanged(function()
-        if Options.CreateConfigTextBox.Value and string.len(Options.CreateConfigTextBox.Value) ~= "" then 
-            FileToSave = Options.CreateConfigTextBox.Value
-        end
-    end)
-    
-    Main:AddButton("Create Configuration File", function()
-        if FileToSave ~= "" or FileToSave ~= nil then 
-            UpdateFile(FileToSave)
-        end
-    end)
-end
-
-local SaveConfigurationBOX = GeneralTab:AddRightTabbox("Save Configuration") do 
-    local Main = SaveConfigurationBOX:AddTab("Save Configuration")
-    Main:AddDropdown("SaveConfigurationDropdown", {Values = GetFiles(), Text = "Choose Configuration to Save"})
-    Main:AddButton("Save Configuration", function()
-        if Options.SaveConfigurationDropdown.Value then 
-            UpdateFile(Options.SaveConfigurationDropdown.Value)
-        end
-    end)
-end
-
-local LoadConfigurationBOX = GeneralTab:AddRightTabbox("Load Configuration") do 
-    local Main = LoadConfigurationBOX:AddTab("Load Configuration")
-    
-    Main:AddDropdown("LoadConfigurationDropdown", {Values = GetFiles(), Text = "Choose Configuration to Load"})
-    Main:AddButton("Load Configuration", function()
-        if table.find(GetFiles(), Options.LoadConfigurationDropdown.Value) then
-            LoadFile(Options.LoadConfigurationDropdown.Value)
-            
-            Toggles.TeamCheck:SetValue(SilentAimSettings.TeamCheck)
-            Toggles.VisibleCheck:SetValue(SilentAimSettings.VisibleCheck)
-            Options.TargetPart:SetValue(SilentAimSettings.TargetPart)
-            Options.Method:SetValue(SilentAimSettings.SilentAimMethod)
-            Toggles.Visible:SetValue(SilentAimSettings.FOVVisible)
-            Options.Radius:SetValue(SilentAimSettings.FOVRadius)
-            Toggles.MousePosition:SetValue(SilentAimSettings.ShowSilentAimTarget)
-            Toggles.Prediction:SetValue(SilentAimSettings.MouseHitPrediction)
-            Options.Amount:SetValue(SilentAimSettings.MouseHitPredictionAmount)
-            Options.HitChance:SetValue(SilentAimSettings.HitChance)
-        end
-    end)
-end
-
-resume(create(function()
-    RenderStepped:Connect(function()
-        if Toggles.MousePosition.Value and Toggles.aim_Enabled.Value then
-            if getClosestPlayer() then 
-                local Root = getClosestPlayer().Parent.PrimaryPart or getClosestPlayer()
-                local RootToViewportPoint, IsOnScreen = WorldToViewportPoint(Camera, Root.Position);
-                -- using PrimaryPart instead because if your Target Part is "Random" it will flicker the square between the Target's Head and HumanoidRootPart (its annoying)
-                
-                mouse_box.Visible = IsOnScreen
-                mouse_box.Position = Vector2.new(RootToViewportPoint.X, RootToViewportPoint.Y)
-            else 
-                mouse_box.Visible = false 
-                mouse_box.Position = Vector2.new()
-            end
-        end
-        
-        if Toggles.Visible.Value then 
-            fov_circle.Visible = Toggles.Visible.Value
-            fov_circle.Color = Options.Color.Value
-            fov_circle.Position = getMousePosition()
-        end
-    end)
-end))
-
--- hooks
-local oldNamecall
-oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(...)
-    local Method = getnamecallmethod()
-    local Arguments = {...}
-    local self = Arguments[1]
-    local chance = CalculateChance(SilentAimSettings.HitChance)
-    if Toggles.aim_Enabled.Value and self == workspace and not checkcaller() and chance == true then
-        if Method == "FindPartOnRayWithIgnoreList" and Options.Method.Value == Method then
-            if ValidateArguments(Arguments, ExpectedArguments.FindPartOnRayWithIgnoreList) then
-                local A_Ray = Arguments[2]
-
-                local HitPart = getClosestPlayer()
-                if HitPart then
-                    local Origin = A_Ray.Origin
-                    local Direction = getDirection(Origin, HitPart.Position)
-                    Arguments[2] = Ray.new(Origin, Direction)
-
-                    return oldNamecall(unpack(Arguments))
-                end
-            end
-        elseif Method == "FindPartOnRayWithWhitelist" and Options.Method.Value == Method then
-            if ValidateArguments(Arguments, ExpectedArguments.FindPartOnRayWithWhitelist) then
-                local A_Ray = Arguments[2]
-
-                local HitPart = getClosestPlayer()
-                if HitPart then
-                    local Origin = A_Ray.Origin
-                    local Direction = getDirection(Origin, HitPart.Position)
-                    Arguments[2] = Ray.new(Origin, Direction)
-
-                    return oldNamecall(unpack(Arguments))
-                end
-            end
-        elseif (Method == "FindPartOnRay" or Method == "findPartOnRay") and Options.Method.Value:lower() == Method:lower() then
-            if ValidateArguments(Arguments, ExpectedArguments.FindPartOnRay) then
-                local A_Ray = Arguments[2]
-
-                local HitPart = getClosestPlayer()
-                if HitPart then
-                    local Origin = A_Ray.Origin
-                    local Direction = getDirection(Origin, HitPart.Position)
-                    Arguments[2] = Ray.new(Origin, Direction)
-
-                    return oldNamecall(unpack(Arguments))
-                end
-            end
-        elseif Method == "Raycast" and Options.Method.Value == Method then
-            if ValidateArguments(Arguments, ExpectedArguments.Raycast) then
-                local A_Origin = Arguments[2]
-
-                local HitPart = getClosestPlayer()
-                if HitPart then
-                    Arguments[3] = getDirection(A_Origin, HitPart.Position)
-
-                    return oldNamecall(unpack(Arguments))
-                end
-            end
-        end
-    end
-    return oldNamecall(...)
-end))
-
-local oldIndex = nil 
-oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, Index)
-    if self == Mouse and not checkcaller() and Toggles.aim_Enabled.Value and Options.Method.Value == "Mouse.Hit/Target" and getClosestPlayer() then
-        local HitPart = getClosestPlayer()
-         
-        if Index == "Target" or Index == "target" then 
-            return HitPart
-        elseif Index == "Hit" or Index == "hit" then 
-            return ((Toggles.Prediction.Value and (HitPart.CFrame + (HitPart.Velocity * PredictionAmount))) or (not Toggles.Prediction.Value and HitPart.CFrame))
-        elseif Index == "X" or Index == "x" then 
-            return self.X 
-        elseif Index == "Y" or Index == "y" then 
-            return self.Y 
-        elseif Index == "UnitRay" then 
-            return Ray.new(self.Origin, (self.Hit - self.Origin).Unit)
-        end
-    end
-
-    return oldIndex(self, Index)
-end))
-end)
-
-local lmao = Window:NewTab("Player") -- kim jong un
-local kkk = lmao:NewSection("Cosmetics & Exclusive Cheats") -- \
-
-kkk:NewButton("No Face", "dont know why niggas paying like 50 bucks for no face but here it is for free shows ur tatoos nd shit so it looks real asf", function()
-    for i,v in pairs(game.Players.LocalPlayer.Character.Head:GetChildren()) do
-        if (v:IsA("Decal")) and v.Name == "Mad" or v.Name == "Stare" or v.Name == "chilled" or v.name == "Sad" then
-        v:Destroy()
-        end
-        end
-end)
-
-kkk:NewSlider("Speed", "frank eatin ass muhfucka every clout shot nigga!", 45, 16, function(s) -- lmao
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-
-kkk:NewButton("Bypass Anti-Cheat", "after u run this u can speed hack xd", function()
-    print("ANTICHEAT BYPASSED")
-end)
-
-kkk:NewSlider("Jump Power", "make u big jump ez", 75, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = s
-end)
-
-kkk:NewButton("Bypass Anti-Jump", "make u jump", function()
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = 55
-end)
-
-
-
-local ex = Window:NewTab("Credits") -- who made this bullshit
-local golddraco = ex:NewSection("UI Development : Glxckz") -- 
-local ar15 = ex:NewSection("Script Development : Dirk / Santana") --
-local ext = ex:NewSection("Testing Development : Ryxe")
+	end,
+})
