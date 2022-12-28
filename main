@@ -1,8 +1,8 @@
 local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
 
 Rayfield:Notify({
-    Title = "Welcome to aim assist V.15",
-    Content = "This content is just to notify you that we thank you and appreciate you for using our script hub!",
+    Title = "discord.gg/haunthub",
+    Content = "welcome to haunt hub join our discord for daily updates / development.",
     Duration = 6.5,
     Image = 4483362458,
     Actions = { -- Notification Buttons
@@ -16,8 +16,8 @@ Rayfield:Notify({
 })
 
 local Window = Rayfield:CreateWindow({
-	Name = "Aim Assist Hub V1.5",
-	LoadingTitle = "A I M _ A S S I S T",
+	Name = "haunt hub | universal version",
+	LoadingTitle = "discord.gg/haunthub",
 	LoadingSubtitle = "Welcome.",
 	ConfigurationSaving = {
 		Enabled = true,
@@ -26,18 +26,18 @@ local Window = Rayfield:CreateWindow({
 	},
         Discord = {
         	Enabled = false,
-        	Invite = "", -- The Discord invite code, do not include discord.gg/
+        	Invite = "haunthub", -- The Discord invite code, do not include discord.gg/
         	RememberJoins = false -- Set this to false to make them join the discord every time they load it up
         },
-	KeySystem = true, -- Set this to true to use our key system
+	KeySystem = false, -- Set this to true to use our key system
 	KeySettings = {
-		Title = "AIM_ASSIST",
-		Subtitle = "Enter your key to get access, Using someone elses key will result in a perm blacklist.",
-		Note = "Join our discord server",
-		FileName = "SiriusKey",
+		Title = "haunt hub",
+		Subtitle = "join the discord, discord.gg/haunthub",
+		Note = "the key is in the discord server, in the channel #key",
+		FileName = "keysys",
 		SaveKey = true,
 		GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-		Key = "aim"
+		Key = "noob"
 	}
 })
 
@@ -56,9 +56,7 @@ local v5 = Window:CreateTab("Bypass Cheats", 0) -- Title, Image
 local v5t = v5:CreateSection("This is where you will be able to bypass any cheats that we cracked.")
 
 local v6 = Window:CreateTab("Credits", 0) -- Title, Image
-local v6r = v6:CreateSection("Lead Programmer : vp#1337")
-local v6x = v6:CreateSection("Beta Tester : ryxe#0822")
-local v6g = v6:CreateSection("Programmer : NamelessGlxckz#7787")
+local v6r = v6:CreateSection("Lead Programmer : dirk#0006")
 
 -- AIM BUTTONS --
 
