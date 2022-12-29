@@ -29,7 +29,7 @@ local Window = Rayfield:CreateWindow({
         	Invite = "haunthub", -- The Discord invite code, do not include discord.gg/
         	RememberJoins = false -- Set this to false to make them join the discord every time they load it up
         },
-	KeySystem = false, -- Set this to true to use our key system
+	KeySystem = true, -- Set this to true to use our key system
 	KeySettings = {
 		Title = "haunt hub",
 		Subtitle = "join the discord, discord.gg/haunthub",
@@ -37,7 +37,7 @@ local Window = Rayfield:CreateWindow({
 		FileName = "keysys",
 		SaveKey = true,
 		GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-		Key = "noob"
+		Key = "XnQjttYwwueszzQ"
 	}
 })
 
